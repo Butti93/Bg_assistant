@@ -1,9 +1,6 @@
 'use client'
 import React from 'react';
-import {
-    onAuthStateChanged,
-    getAuth,
-} from 'firebase/auth';
+import { onAuthStateChanged, getAuth, signOut } from 'firebase/auth';
 import firebase_app from '../firebase/config';
 
 const auth = getAuth(firebase_app);
@@ -31,8 +28,17 @@ export const AuthContextProvider = ({
         return () => unsubscribe();
     }, []);
 
+    const handleSignOut = async () => {
+        try {
+          await signOut(auth);
+          // Sign out successful, do something if needed
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
     return (
-        <AuthContext.Provider value={{ user }}>
+        <AuthContext.Provider value={{ user, handleSignOut }}>
             {loading ? <div>Loading...</div> : children}
         </AuthContext.Provider>
     );
